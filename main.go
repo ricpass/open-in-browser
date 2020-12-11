@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"os/exec"
@@ -10,16 +11,23 @@ import (
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[1:]
+		b, errDecode := base64.URLEncoding.DecodeString(path)
 
-		if !strings.HasPrefix(path, "http://") && strings.HasPrefix(path, "https://") {
-			fmt.Fprintf(w, "INVALID_URL: %s", path)
+		url := string(b)
+
+		if errDecode != nil {
+			fmt.Fprintf(w, "Error: %s", errDecode)
+		}
+
+		if !strings.HasPrefix(url, "http://") && strings.HasPrefix(url, "https://") {
+			fmt.Fprintf(w, "INVALID_URL: %s", url)
 			return
 		}
 
-		err := exec.Command("xdg-open", path).Run()
+		errOpen := exec.Command("xdg-open", url).Run()
 
-		if err != nil {
-			fmt.Fprintf(w, "Error: %s", err)
+		if errOpen != nil {
+			fmt.Fprintf(w, "Error: %s", errOpen)
 		} else {
 			fmt.Fprintf(w, "OK")
 		}
