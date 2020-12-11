@@ -16,7 +16,7 @@ func main() {
 			return
 		}
 
-		err := exec.Command("open", path).Run()
+		err := exec.Command("xdg-open", path).Run()
 
 		if err != nil {
 			fmt.Fprintf(w, "Error: %s", err)
