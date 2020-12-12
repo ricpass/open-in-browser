@@ -11,9 +11,12 @@ import (
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[1:]
+
+		fmt.Printf("path=%s", path)
 		b, errDecode := base64.URLEncoding.DecodeString(path)
 
 		url := string(b)
+		fmt.Printf("url=%s", url)
 
 		if errDecode != nil {
 			fmt.Fprintf(w, "Error: %s", errDecode)
@@ -28,9 +31,10 @@ func main() {
 
 		if errOpen != nil {
 			fmt.Fprintf(w, "Error: %s", errOpen)
-		} else {
-			fmt.Fprintf(w, "OK")
+			return
 		}
+
+		fmt.Fprintf(w, "OK")
 	})
 
 	http.ListenAndServe(":8080", nil)
