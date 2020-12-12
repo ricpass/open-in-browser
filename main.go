@@ -16,22 +16,28 @@ func main() {
 		b, errDecode := base64.URLEncoding.DecodeString(path)
 
 		if errDecode != nil {
-			fmt.Fprintf(w, "Error: %s", errDecode)
+			errMsg := fmt.Sprintf("Error: %s", errDecode)
+			fmt.Println(errMsg)
+			fmt.Fprintln(w, errMsg)
 			return
 		}
 
 		url := string(b)
 		fmt.Printf("url=%s\n", url)
 
-		if !strings.HasPrefix(url, "http://") && strings.HasPrefix(url, "https://") {
-			fmt.Fprintf(w, "INVALID_URL: %s", url)
+		if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+			errMsg := fmt.Sprintf("INVALID_URL: %s", url)
+			fmt.Println(errMsg)
+			fmt.Fprintln(w, errMsg)
 			return
 		}
 
-		errOpen := exec.Command("xdg-open", url).Run()
+		errOpen := exec.Command("open", url).Run()
 
 		if errOpen != nil {
-			fmt.Fprintf(w, "Error: %s", errOpen)
+			errMsg := fmt.Sprintf("Error: %s", errOpen)
+			fmt.Println(errMsg)
+			fmt.Fprintln(w, errMsg)
 			return
 		}
 
