@@ -10,11 +10,12 @@ import (
 )
 
 func main() {
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[1:]
 
 		fmt.Printf("path=%s\n", path)
-		b, errDecode := base64.URLEncoding.DecodeString(path)
+		b, errDecode := base64.StdEncoding.DecodeString(path)
 
 		if errDecode != nil {
 			errMsg := fmt.Sprintf("Error: %s", errDecode)
