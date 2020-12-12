@@ -12,15 +12,16 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[1:]
 
-		fmt.Printf("path=%s", path)
+		fmt.Printf("path=%s\n", path)
 		b, errDecode := base64.URLEncoding.DecodeString(path)
-
-		url := string(b)
-		fmt.Printf("url=%s", url)
 
 		if errDecode != nil {
 			fmt.Fprintf(w, "Error: %s", errDecode)
+			return
 		}
+
+		url := string(b)
+		fmt.Printf("url=%s\n", url)
 
 		if !strings.HasPrefix(url, "http://") && strings.HasPrefix(url, "https://") {
 			fmt.Fprintf(w, "INVALID_URL: %s", url)
