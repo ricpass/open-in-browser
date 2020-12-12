@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os/exec"
+	"runtime"
 	"strings"
 )
 
@@ -32,7 +33,12 @@ func main() {
 			return
 		}
 
-		errOpen := exec.Command("open", url).Run()
+		var errOpen error
+		if runtime.GOOS == "darwin" {
+			errOpen = exec.Command("open", url).Run()
+		} else if runtime.GOOS == "linux" {
+			errOpen = exec.Command("xdg-open", url).Run()
+		}
 
 		if errOpen != nil {
 			errMsg := fmt.Sprintf("Error: %s", errOpen)
